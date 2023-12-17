@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{AuthController, B24Controller};
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(AuthController::class)->group(function(){
+    Route::post('/login','login');
+    Route::get('/user','user')->middleware('auth:sanctum');
+});
+
+Route::controller(B24Controller::class)->middleware('auth:sanctum')->prefix('b24')->group(function(){
+    Route::get('/get-analytics','getAnalytics');
 });
