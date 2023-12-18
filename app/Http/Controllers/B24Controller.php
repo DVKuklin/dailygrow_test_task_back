@@ -9,7 +9,9 @@ class B24Controller extends Controller
 {
     public function getAnalytics(Request $request) {
         try {
-            $b24_link = $request->user()->b24_link;
+            $user = $request->user();
+            $user->makeVisible('b24_link');
+            $b24_link = $user->b24_link;
         
             $leads = Http::post($b24_link.'crm.lead.list.json',[
                     'select' => ['ID','TITLE','UF_CRM_1702559476','DATE_CREATE']

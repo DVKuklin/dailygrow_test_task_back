@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     public function login(Request $request) {
-        $user = User::where('name', $request->login)->first()->makeVisible('password');
+        $user = User::where('name', $request->login)->first();
 
         if (!$user) {
             return response()->json(['status'=>'notFound','message'=>'Пользователя с таким логином не существует'],200);
         }
+
+        $user->makeVisible('password');
 
         if ( Hash::check($request->password, $user->password) ){
             $user->tokens()->delete();
@@ -30,6 +32,6 @@ class AuthController extends Controller
     }
 
     public function user(Request $request) {
-        return $request->user();
+        return response()->json(['status'=>'success','data'=>$request->user()],200);
     }
 }
