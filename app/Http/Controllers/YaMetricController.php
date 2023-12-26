@@ -40,7 +40,7 @@ class YaMetricController extends Controller
             return response()->json(['status'=>'notConnection','messge'=>'Соединение не настроено']);
         }
         $res = Http::withToken($user->ya_metric_token)->get('https://api-metrika.yandex.net/management/v1/counters');
-        if (isset($res['errors'])) {
+        if ($res->status() == 403) {
             return response()->json(['status'=>'notConnection'],200);
         }
         return response()->json(['status'=>'success'],200);
