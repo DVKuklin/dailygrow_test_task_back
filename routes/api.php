@@ -28,5 +28,6 @@ Route::controller(YaMetricController::class)->prefix('ya-metric')
                                         ->middleware('auth:sanctum')
                                         ->group(function(){
     Route::post('/get-token','getToken');
-    Route::get('/check-connection','checkConnection');
+    Route::get('/get-counters','getCounters');
+    Route::post('/get-analytics','getAnalytics');
 });
