@@ -13,9 +13,15 @@ class B24Controller extends Controller
             $user->makeVisible('b24_link');
             $b24_link = $user->b24_link;
         
-            $leads = Http::post($b24_link.'crm.lead.list.json',[
+            $res = Http::post($b24_link.'crm.lead.list.json',[
                     'select' => ['ID','TITLE','UF_CRM_1702559476','DATE_CREATE']
-                ])->json()['result'];
+            ]);
+
+            if ($res->status() !== 200) {
+                return response()->json(["status"=>"fail","message"=>"Что то не так с соединением c Bitrix24"],200);
+            }
+                
+            $leads = $res->json()['result'];
     
             $lead_dailygrow_field_list = collect(Http::post($b24_link.'crm.lead.userfield.get',[
                     'ID' => 227
