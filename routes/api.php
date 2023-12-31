@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AuthController, B24Controller, YaMetricController};
+use App\Http\Controllers\{AuthController, B24Controller, YaDirectController, YaMetricController};
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +30,11 @@ Route::controller(YaMetricController::class)->prefix('ya-metric')
     Route::post('/get-token','getToken');
     Route::get('/get-counters','getCounters');
     Route::post('/get-analytics','getAnalytics');
+});
+
+Route::controller(YaDirectController::class)->prefix('ya-direct')
+                                        ->middleware('auth:sanctum')
+                                        ->group(function(){
+    Route::post('/get-token','getToken');
+    Route::post('/get-campaigns','getCampaigns');
 });

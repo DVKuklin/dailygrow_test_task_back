@@ -31,7 +31,6 @@ class YaMetricController extends Controller
                 $access_data['refresh_token'] = $res['refresh_token'];
                 $user->ya_metrika = json_encode($access_data);
                 $user->save();
-                $this->updateCounters($request);
                 return response()->json(['status'=>'success'],200);
             }
             return response()->json(['status'=>'fail'],200);
