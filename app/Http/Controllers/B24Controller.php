@@ -144,4 +144,147 @@ class B24Controller extends Controller
             return response()->json(['status'=>'error',"message"=>"Что то пошло не так."],200);
         }
     }
+
+    public function createLeads() {
+        $link = "https://b24-oopwiw.bitrix24.ru/rest/1/iss07ljyd5xd58o9/";
+
+        $dailygrow = [
+            'Постоянный клиент',
+            'Почта info',
+            'Новый сайт',
+            'Старый сайт',
+            'Звонок',
+            ''
+        ];
+
+        $deal_dailygrow = "UF_CRM_1706010654";
+        $lead_dailygrow = "UF_CRM_1706010594";
+
+        for ($i = 110; $i< 180; $i++) {
+            $index = rand(0,5);
+            $res = Http::post($link.'crm.lead.add',[
+                'fields' => [
+                    'TITLE' => 'Лид созданный автоматически '.$i,
+                    // $lead_dailygrow => $dailygrow[$index],
+                ]
+            ]);
+        }
+
+
+        return $res->json();
+    }
+
+    public function getLeads() {
+        $link = "https://b24-oopwiw.bitrix24.ru/rest/1/iss07ljyd5xd58o9/";
+        $leadID = 0;
+        $leads = [];
+        $is_all = false;
+
+        while (!$is_all) {
+            $res = Http::post($link.'crm.lead.list.json',[
+                'select' => ['ID','TITLE','DATE_CREATE',"OPPORTUNITY","STAGE_ID"],
+                'start' => -1,
+                'order' => ['ID' => 'ASC'],
+                'filter' => ['>ID' => $leadID],
+                // 'filter' => ['!STAGE_ID'=>$not_use_stage, '>=DATE_CREATE'=>$filterDate['dateFrom'], '<=DATE_CREATE' => $filterDate['dateTo']]
+            ]);
+            $res = $res->json()['result'];
+            $leads = array_merge($leads,$res);
+            $leadID = $res[count($res)-1]['ID'];
+            if (count($res) < 50) {
+                $is_all = true;
+            }
+        }
+
+        return $leads;
+    }
+
+    public function createDeals() {
+        $link = "https://b24-oopwiw.bitrix24.ru/rest/1/iss07ljyd5xd58o9/";
+
+        $dailygrow = [
+            'Постоянный клиент',
+            'Почта info',
+            'Новый сайт',
+            'Старый сайт',
+            'Звонок',
+            ''
+        ];
+        // return $dailygrow;//crm.deal.fields
+        // $res = Http::post($link.'crm.deal.fields');
+        // return $res->json();
+        $deal_dailygrow = "UF_CRM_1706010654";
+        $lead_dailygrow = "UF_CRM_1706010594";
+        $cost_field = 'UF_CRM_1706010827';
+
+        $stage_id = [
+            "WON",
+            "C1:WON",
+            "C5:WON",
+            "C5:FINAL_INVOICE",
+            "C1:FINAL_INVOICE"
+        ];
+
+        for ($i = 124; $i< 223; $i++) {
+            $index = rand(0,5);
+            $sum = rand(100,100000);
+            $res = Http::post($link.'crm.deal.add',[
+                'fields' => [
+                    'TITLE' => 'Сделка созданная автоматически '.$i,
+                    'OPPORTUNITY' => $sum,
+                    $deal_dailygrow => $dailygrow[$index],
+                    $cost_field => $sum * rand(60,90) / 100,
+                    'STAGE_ID'=> $stage_id[rand(0,4)],
+                    'CONTACT_ID'=>1
+                ]
+            ]);
+        }
+
+
+        return $res->json();
+    }
+
+    public function createDeal() {
+        $link = "https://b24-oopwiw.bitrix24.ru/rest/1/iss07ljyd5xd58o9/";
+
+        $dailygrow = [
+            'Постоянный клиент',
+            'Почта info',
+            'Новый сайт',
+            'Старый сайт',
+            'Звонок',
+            ''
+        ];
+        // return $dailygrow;//crm.deal.fields
+        // $res = Http::post($link.'crm.deal.fields');
+        // return $res->json();
+        $deal_dailygrow = "UF_CRM_1706010654";
+        $lead_dailygrow = "UF_CRM_1706010594";
+        $cost_field = 'UF_CRM_1706010827';
+
+        $stage_id = [
+            "WON",
+            "C1:WON",
+            "C5:WON",
+            "C5:FINAL_INVOICE",
+            "C1:FINAL_INVOICE"
+        ];
+
+        $index = rand(0,5);
+        $sum = rand(100,100000);
+        $res = Http::post($link.'crm.deal.add',[
+            'fields' => [
+                'TITLE' => 'Сделка c utm_source = yandex ',
+                'OPPORTUNITY' => $sum,
+                $deal_dailygrow => $dailygrow[$index],
+                $cost_field => $sum * rand(60,90) / 100,
+                'STAGE_ID'=> $stage_id[rand(0,4)],
+                'CONTACT_ID'=>1,
+                'UTM_SOURCE'=>'yandex'
+            ]
+        ]);
+
+
+        return $res->json();
+    }
 }
