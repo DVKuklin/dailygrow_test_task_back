@@ -81,3 +81,14 @@ Route::post('/ym-test', function (Request $request) {
 
     return $res;
 });
+
+Route::post('/test-middleware', function (Request $request) {
+
+    return $request->all();
+
+})->middleware('test:someData');
+
+
+Route::get('/redirect-url', function (Request $request) {
+    return 'redirect-url';
+});
