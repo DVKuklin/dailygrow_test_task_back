@@ -3,9 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AuthController, B24Controller, YaDirectController, YaMetricController};
+use App\Jobs\TestJob;
 
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Redis;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,4 +94,33 @@ Route::post('/test-middleware', function (Request $request) {
 
 Route::get('/redirect-url', function (Request $request) {
     return 'redirect-url';
+});
+
+Route::get('/queue-test', function (Request $request) {
+    $parameters = 'parameters';
+    
+    dispatch(function () use ($parameters) {
+        for ($i=0;$i<1000000;$i++) {
+            for ($j=0;$j<10000;$j++) {
+            }
+        }
+
+        info($parameters);
+    })->afterResponse();
+    
+    // Redis::set('name', 'Taylor');
+    // return "ok";
+    // info('ffffffffff');
+    // TestJob::dispatch('Hello');
+
+    //Или так
+    // $job = new TestJob('Hello');
+    // dispatch($job);
+
+    return '55555';
+});
+
+Route::get('/queue-test-test', function (Request $request) {
+
+    return 'queue-test-test';
 });
