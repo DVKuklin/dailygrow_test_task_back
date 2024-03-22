@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'b24_link'
+        'b24_link',
+        'ya_metrika'
     ];
 
     /**
@@ -33,6 +34,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'b24_link',
+        'ya_metrika'
     ];
 
     /**

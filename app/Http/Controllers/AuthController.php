@@ -18,7 +18,7 @@ class AuthController extends Controller
         $user->makeVisible('password');
 
         if ( Hash::check($request->password, $user->password) ){
-            $user->tokens()->delete();
+            // $user->tokens()->delete();
             $token = $user->createToken("tokenName");
             return response()->json([
                 "status"=>"success",
